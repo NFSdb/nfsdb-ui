@@ -20,7 +20,7 @@ $(function() {
     sqlEditor.setShowPrintMargin(false);
     sqlEditor.setDisplayIndentGuides(false);
     sqlEditor.setHighlightActiveLine(false);
-
+    sqlEditor.focus();
 
     var grid;
     var columns = [
@@ -34,7 +34,8 @@ $(function() {
 
     var options = {
         enableCellNavigation: true,
-        enableColumnReorder: false
+        enableColumnReorder: false,
+        forceFitColumns: true
     };
 
     var data = [];
@@ -62,7 +63,7 @@ $(function() {
         $("#resultGrid > .slick-viewport").css('height', (bodyheight - vpTop) + 'px');
     }
 
-    $('.sp').resizable({
+    $('.sp:not(.last)').resizable({
         handles: 's',
         start: function(event, ui) {
             $('iframe').css('pointer-events', 'none');
