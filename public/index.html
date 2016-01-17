@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>NFSdb - Query</title>
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="" type="text/css" rel="stylesheet">
+        <!--[if lt IE 9]>
+            <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        
+        <link href="//code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" type="text/css" rel="stylesheet" media="all">
+        <link href="http://www.bootply.com/plugins/bootstrap-select.min.css" type="text/css" rel="stylesheet">
+        
+        <link rel="stylesheet" href="slickgrid/slick.grid.css" type="text/css" />
+        <link rel="stylesheet" href="slickgrid/css/smoothness/jquery-ui-1.11.3.custom.css" type="text/css" />
+        <link rel="stylesheet" href="slickgrid/examples/examples.css" type="text/css" />
+
+        <!-- Custom styles for this template -->
+        <link href="theme.css" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">NFSdb</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Query</a></li>
+                        <li><a href="upload.html">Upload</a></li>
+                        <li><a href="http://github.nfsdb.org/">Source</a></li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </nav>
+
+        <div class="wrapper">
+            <div class="outer">
+                <div class="row">
+                    <div class="col-sm-12 sp tab-pane" id="jsPane">
+                        <div class="inner" id="sqlEditor"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 last" style="height: 500px">
+                        <div class="inner" id="resultGrid"></div>
+                    </div>
+                </div>
+            </div><!--/outer-->
+        </div><!--/wrapper-->
+
+
+        <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script type='text/javascript' src="//code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+        <script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+        <script type='text/javascript' src="//ajaxorg.github.io/ace/build/src-noconflict/ace.js"></script>
+        <script type='text/javascript' src="//ajaxorg.github.io/ace/build/src-noconflict/ext-language_tools.js"></script>
+        <script src="query.js"></script>
+
+
+        <!--<script src="slickgrid/lib/jquery-1.11.2.min.js"></script>-->
+        <script src="slickgrid/lib/jquery.event.drag-2.2.js"></script>
+        <script src="slickgrid/slick.core.js"></script>
+        <script src="slickgrid/slick.grid.js"></script>
+    </body>
+</html>

@@ -1,0 +1,336 @@
+﻿body {
+  padding-top: 70px;
+  padding-bottom: 30px;
+}
+
+.theme-dropdown .dropdown-menu {
+  position: static;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.theme-showcase > p > .btn {
+  margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+  width: auto;
+}
+
+html,body {
+	height:100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+.navbar-default {
+  background-color:#fafafa;
+  min-height: 40px;
+  border-width:0;
+}
+  
+.navbar-default a.navbar-brand {
+  color:#FC1298;
+  font-size:22px; 
+  font-weight:800;
+  text-shadow:0 0 1px rgba(255,0,210, 0.4);
+}
+
+.navbar-default li>a,.navbar-brand {
+ padding-top: 11px;
+ padding-bottom: 11px;
+ line-height:19px;
+}
+
+.navbar-toggle {
+	padding:5px;
+}
+
+.row {
+    margin-left:0;
+    margin-right:0;
+}
+
+.row .sp {
+   height:150px;
+   min-height:45px;
+   padding-right:0;
+   padding-left: 0;
+   border-bottom:4px solid transparent;
+}
+
+.row .sp.toolbar {
+	padding-bottom:30px;
+    height:240px;
+}
+
+.last {
+	height:100%;
+}
+
+.outer {
+  border:0px #000 solid;
+  height:100%;
+}
+
+.preview {
+  overflow-y: auto;
+  overflow-x: hidden;
+  /*height:100%;
+  position: relative;*/
+}
+
+.resize {
+   /*border-right:3px #eee solid;*/
+}
+
+.pane-settings {
+  background: #002B36;
+  color:#b3b1b1;
+  position: absolute;
+  z-index: 199;
+  padding: 3px;
+  font-size: 16px;
+  opacity: .8;
+  right: 5px;
+  top: 0;
+  margin: 0;
+}
+  
+.pane-panel {
+  background: #001a25;
+  color:#b3b1b1;
+  position: absolute;
+  z-index: 198;
+  right: 5px;
+  top: 28px;
+  margin: 0;
+  width:220px;
+  min-height:100px;
+  display:none;
+}
+
+input[type=radio], input[type=checkbox] {
+	vertical-align:middle;
+    margin-top:-1px;
+}
+.pane-panel .row > [class*='col-']{
+	color:#000;
+    padding:4px;
+    font-size:12px;
+}
+.pane-panel .row > [class*='col-']:nth-child(1) {
+    background-color: rgba(240,240,240,.4);
+}
+.pane-panel .row > [class*='col-']:nth-child(2) {
+    background-color: rgba(240,240,240,.5);
+}
+.pane-panel .row > [class*='col-']:nth-child(3) {
+    background-color: rgba(240,240,240,.6);
+}
+.pane-panel .row > [class*='col-']:nth-child(4) {
+    background-color: rgba(240,240,240,.7);
+}
+.pane-panel .row > [class*='col-']:nth-child(5) {
+    background-color: rgba(240,240,240,.8);
+}
+    
+.pane-label {
+  font-family: monospace;
+  background: #002B36;
+  color:#b3b1b1;
+  position: absolute;
+  z-index: 199;
+  padding: 3px;
+  font-size: 11px;
+  opacity: .7;
+  right: 10px;
+  bottom: 10px;
+  margin: 0;
+}
+
+.wrapper {
+	width:100%;
+    min-height: 100%;
+	height: 100%;
+    overflow:hidden;
+}
+
+.inner {
+	overflow-y:auto;
+    overflow-x:hidden;
+    /*height:100%;*/
+    min-height:100%;
+}
+      
+.navbar-block {
+    background-color:#FC1298;
+	position:absolute;
+    z-index:2;
+    border:0 #eee solid;
+    right:24px;
+    top:24px;
+    height:215px;
+    width:150px;
+    display:none;
+}
+
+.ui-resizable { }
+.ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
+/*.ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }*/
+.ui-resizable-e {
+	background-color: #666;
+	border-right: 1px solid #222;
+	border-left: 1px solid #222;
+	/*box-shadow: inset 0 1px 0 #6e6e6e,0 2px 2px rgba(0,0,0,0.4);*/
+    width:10px;
+    z-index: 88 !important;
+}
+.ui-resizable-e:after {
+    content: "-";
+    display: block;
+    position: absolute;
+    top: calc(50% - 16px);
+    left: 0;
+    height: 25px;
+    width: 2px;
+    background-color:rgba(0,0,0,0.4);
+    margin:3px;
+}
+.ui-resizable-s {
+	background-color: #666;
+    border-top: 1px solid #222;
+	border-bottom: 1px solid #222;
+	/*box-shadow: inset 0 1px 0 #6e6e6e,0 2px 2px rgba(0,0,0,0.4);*/
+    height:10px;
+}
+.ui-resizable-s:after {
+    content: "-";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: calc(50% - 12px);
+    height: 2px;
+    width: 25px;
+    background-color:rgba(0,0,0,0.4);
+    margin:3px;
+}
+
+#cssEditor {
+    /* add space to bottom since this is not resizeable */
+	border-bottom:10px solid transparent;
+}
+#htmEditor {
+	
+}
+
+#descBar > div,#infoBar > div {
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  	line-height: 1.1;
+    padding:1px;  
+}
+
+#descBar > div {
+	overflow:hidden;
+}
+
+#descBar,#infoBar {
+    border:0 #eee solid;
+    border-bottom-width:0px;
+    padding-bottom:3px;
+    font-size:12px;
+}
+
+#infoBar small,#descBar small {
+	font-size:8px;
+    text-transform:uppercase;
+    color:#ccc;
+    display:none;
+}
+
+#infoBar .btn {
+	background-color:#eee;
+}
+
+.input-xs {
+  height: 21px;
+  padding: 1px 4px;
+  font-size: 9px;
+  line-height: 1;
+  border-radius:2px;
+  width:120px;
+  display:inline;
+}
+
+
+.editable {
+  float:left;
+  margin-right:2px;
+  border:1px #ddd solid;
+  padding:1px;
+  line-height: 1.5;
+  border-radius:2px;
+}
+
+.selp {
+
+}
+
+.btn-group.bootstrap-select {
+	padding:0;
+    margin:0;
+    outline:0;
+    float:left;
+    margin-right:2px;
+    margin-bottom:1px;
+}
+
+.btn-group.open, .dropdown-menu, .btn-group.open .dropdown-toggle {
+	box-shadow:0 0 0;
+}
+
+.btn-group {
+  border-color: #ccc;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+}
+
+.bootstrap-select .btn:focus {
+    outline:0 !important;
+}
+
+.filter-option > span {
+	
+}
+
+::-webkit-scrollbar {
+    width: 0.9em;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.7);
+}
+
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(100, 100, 100, 0.4);
+}
+
+.ace_autocomplete {
+  width: 270px;
+  z-index: 200000;
+  background: #666;
+  color: #eee;
+  border: 0 lightgray solid;
+  position: fixed;
+  box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  line-height: 1.4;
+}
