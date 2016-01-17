@@ -22,80 +22,82 @@ $(function() {
     sqlEditor.setHighlightActiveLine(false);
 
 
-    //var grid;
-    //var columns = [
-    //    { id: "title", name: "Title", field: "title" },
-    //    { id: "duration", name: "Duration", field: "duration" },
-    //    { id: "%", name: "% Complete", field: "percentComplete" },
-    //    { id: "start", name: "Start", field: "start" },
-    //    { id: "finish", name: "Finish", field: "finish" },
-    //    { id: "effort-driven", name: "Effort Driven", field: "effortDriven" }
-    //];
+    var grid;
+    var columns = [
+        { id: "title", name: "Title", field: "title" },
+        { id: "duration", name: "Duration", field: "duration" },
+        { id: "%", name: "% Complete", field: "percentComplete" },
+        { id: "start", name: "Start", field: "start" },
+        { id: "finish", name: "Finish", field: "finish" },
+        { id: "effort-driven", name: "Effort Driven", field: "effortDriven" }
+    ];
 
-    //var options = {
-    //    enableCellNavigation: true,
-    //    enableColumnReorder: false
-    //};
+    var options = {
+        enableCellNavigation: true,
+        enableColumnReorder: false
+    };
 
-    //var data = [];
-    //for (var i = 0; i < 500; i++) {
-    //    data[i] = {
-    //        title: "Task " + i,
-    //        duration: "5 days",
-    //        percentComplete: Math.round(Math.random() * 100),
-    //        start: "01/01/2009",
-    //        finish: "01/05/2009",
-    //        effortDriven: (i % 5 == 0)
-    //    };
-    //}
+    var data = [];
+    for (var i = 0; i < 500; i++) {
+        data[i] = {
+            title: "Task " + i,
+            duration: "5 days",
+            percentComplete: Math.round(Math.random() * 100),
+            start: "01/01/2009",
+            finish: "01/05/2009",
+            effortDriven: (i % 5 == 0)
+        };
+    }
 
-    //grid = new Slick.Grid("#resultGrid", data, columns, options);
-    //grid.resizeCanvas();
+    grid = new Slick.Grid("#resultGrid", data, columns, options);
+    grid.resizeCanvas();
 
-    //var top = $('.last').offset().top;
-    //var bodyheight = $(document).height();
+    var top = $('#resultGrid').offset().top;
+    var bodyheight = $(document).height();
 
-    //var reseizeGrid = function () {
-    //    $('.last').css('height', (bodyheight - top) + 'px');
-    //    grid.resizeCanvas();
-    //}
+    var reseizeGrid = function () {
+        $('#resultGrid').css('height', (bodyheight - top) + 'px');
+        grid.resizeCanvas();
+        var vpTop = $("#resultGrid > .slick-viewport").offset().top;
+        $("#resultGrid > .slick-viewport").css('height', (bodyheight - vpTop) + 'px');
+    }
 
-    //$('.sp').resizable({
-    //    handles: 's',
-    //    start: function(event, ui) {
-    //        $('iframe').css('pointer-events', 'none');
-    //    },
-    //    stop: function(event, ui) {
-    //        $('iframe').css('pointer-events', 'auto');
-    //    },
-    //    resize: function(event, ui) {
-    //        var x = ui.element.outerWidth();
-    //        var y = ui.element.outerHeight();
-    //        var par = $(this).parent().width();
-    //        var ele = ui.element;
+    $('.sp').resizable({
+        handles: 's',
+        start: function(event, ui) {
+            $('iframe').css('pointer-events', 'none');
+        },
+        stop: function(event, ui) {
+            $('iframe').css('pointer-events', 'auto');
+        },
+        resize: function(event, ui) {
+            var x = ui.element.outerWidth();
+            var y = ui.element.outerHeight();
+            var par = $(this).parent().width();
+            var ele = ui.element;
 
-    //        if (x == par) {
-    //            sqlEditor.resize();
-    //            top = $('.last').offset().top;
-    //            reseizeGrid();
-    //            return;
-    //        }
+            if (x == par) {
+                sqlEditor.resize();
+                top = $('#resultGrid').offset().top;
+                reseizeGrid();
+                return;
+            }
 
-    //        $.each(ele.siblings(), function(idx, item) {
-    //            ele.siblings().eq(idx).css('height', y + 'px');
-    //        });
+            $.each(ele.siblings(), function(idx, item) {
+                ele.siblings().eq(idx).css('height', y + 'px');
+            });
 
 
-    //        sqlEditor.resize();
-    //        top = $('.last').offset().top;
-    //        reseizeGrid();
-    //    }
-    //});
+            sqlEditor.resize();
+            top = $('#resultGrid').offset().top;
+            reseizeGrid();
+        }
+    });
 
-    //$(window).resize(function () {
-    //    bodyheight = $(document).height();
-    //    reseizeGrid();
-    //}).resize();
+    $(window).resize(function () {
+        bodyheight = $(document).height();
+        reseizeGrid();
+    }).resize();
 
 });
 
