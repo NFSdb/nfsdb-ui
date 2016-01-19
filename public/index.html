@@ -40,12 +40,21 @@
         <div class="wrapper">
             <div class="outer">
                 <div class="row">
-                    <div class="col-sm-12 sp tab-pane" id="jsPane">
-                        <div class="inner" id="sqlEditor"></div>
+                    <div class="col-sm-12 sp tab-pane" id="sqlPane">
+                        <div style="padding:3px;height:28px;">
+                            <button class="btn btn-primary btn-xs">Mini</button>
+                            <button class="btn btn-primary btn-xs">Minimore</button>
+                            <button class="btn btn-primary btn-xs">Foo</button>
+                            <button class="btn btn-primary btn-xs">Blahblah</button>
+                            <button class="btn btn-primary btn-xs">Mini</button>
+                            <button class="btn btn-primary btn-xs">Foo</button>
+                        </div>
+                        <div class="inner" id="sqlEditor">
+                        </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12 sp last" style="height: 500px">
+                    <div class="col-sm-12 sp last">
                         <div class="inner slickgrid" id="resultGrid"></div>
                     </div>
                 </div>
@@ -53,7 +62,7 @@
         </div><!--/wrapper-->
 
 
-        <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.js"></script>
         <script type='text/javascript' src="//code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
         <script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
         <script type='text/javascript' src="ace/src-min-noconflict/ace.js"></script>

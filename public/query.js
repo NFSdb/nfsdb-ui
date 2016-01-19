@@ -20,47 +20,69 @@ $(function() {
     sqlEditor.setShowPrintMargin(false);
     sqlEditor.setDisplayIndentGuides(false);
     sqlEditor.setHighlightActiveLine(false);
-    sqlEditor.focus();
 
-    var grid;
-    var columns = [
-        { id: "title", name: "Title", field: "title" },
-        { id: "duration", name: "Duration", field: "duration" },
-        { id: "%", name: "% Complete", field: "percentComplete" },
-        { id: "start", name: "Start", field: "start" },
-        { id: "finish", name: "Finish", field: "finish" },
-        { id: "effort-driven", name: "Effort Driven", field: "effortDriven" }
-    ];
+    if (typeof (Storage) !== "undefined" && localStorage.getItem("lastQuery")) {
+        sqlEditor.setValue(localStorage.getItem("lastQuery"));
+    }
+
+    sqlEditor.focus();
 
     var options = {
         enableCellNavigation: true,
-        enableColumnReorder: false,
-        forceFitColumns: true
+        enableColumnReorder: false
     };
 
-    var data = [];
-    for (var i = 0; i < 500; i++) {
-        data[i] = {
-            title: "Task " + i,
-            duration: "5 days",
-            percentComplete: Math.round(Math.random() * 100),
-            start: "01/01/2009",
-            finish: "01/05/2009",
-            effortDriven: (i % 5 == 0)
-        };
-    }
-
-    grid = new Slick.Grid("#resultGrid", data, columns, options);
+    var grid = new Slick.Grid("#resultGrid", [], [], options);
     grid.resizeCanvas();
+    var lastRequest = null;
+
+    sqlEditor.commands.addCommand({
+        name: 'runQuery',
+        bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
+        exec: function (editor) {
+            var query = editor.getValue();
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem("lastQuery", query);
+            }
+            if (lastRequest) {
+                lastRequest.abort();
+            }
+
+            lastRequest = $.get('/js', { query: query }, function (response) {
+                if (response.error) {
+                    alert(response.error);
+                } else {
+
+                    var columns = [];
+                    response.columns.forEach(function(col) {
+                        columns.push({ id: col.name, name: col.name, field: col.name });
+                    });
+
+                    grid.setColumns(columns);
+                    grid.setData(response.result);
+                    grid.updateRowCount();
+                    // dataView.setItems(newData, "Id");
+                    grid.autosizeColumns();
+                    grid.render();
+                    grid.resizeCanvas();
+                }
+            }).fail(function (jqXHR, textStatus) {
+                if (jqXHR.status == 400) {
+                    alert(jqXHR.responseJSON.error);
+                }
+            });
+        }
+    });
 
     var top = $('#resultGrid').offset().top;
     var bodyheight = $(document).height();
 
     var reseizeGrid = function () {
+        $('#resultGrid').height(bodyheight - top);
         $('#resultGrid').css('height', (bodyheight - top) + 'px');
         grid.resizeCanvas();
-        var vpTop = $("#resultGrid > .slick-viewport").offset().top;
-        $("#resultGrid > .slick-viewport").css('height', (bodyheight - vpTop) + 'px');
+        // var vpTop = $("#resultGrid > .slick-viewport").offset().top;
+        // $("#resultGrid > .slick-viewport").css('height', (bodyheight - vpTop) + 'px');
     }
 
     $('.sp:not(.last)').resizable({
