@@ -35,43 +35,57 @@ $(function() {
     var grid = new Slick.Grid("#resultGrid", [], [], options);
     grid.resizeCanvas();
     var lastRequest = null;
+    var queryStart;
+
+    var exeRun = function(editor) {
+        var query = editor.getValue();
+        if (typeof (Storage) !== "undefined") {
+            localStorage.setItem("lastQuery", query);
+        }
+        if (lastRequest) {
+            lastRequest.abort();
+        }
+
+        queryStart = new Date().getTime();
+        lastRequest = $.get('/js', { query: query }, function (response) {
+            if (response.error) {
+                alert(response.error);
+            } else {
+                var duration = (new Date().getTime() - queryStart);
+                var columns = [];
+                response.columns.forEach(function (col) {
+                    columns.push({ id: col.name, name: col.name, field: col.name });
+                });
+                $('#statusMsg').removeClass('msg-error');
+                $('#statusMsg').text(response.result.length + ' rows retuned in ' + duration + ' ms');
+                grid.setColumns(columns);
+                grid.setData(response.result);
+                grid.updateRowCount();
+                grid.autosizeColumns();
+                grid.render();
+                grid.resizeCanvas();
+            }
+        }).fail(function (jqXHR, textStatus) {
+            if (jqXHR.status == 400) {
+                if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+                    $('#statusMsg').text(jqXHR.responseJSON && jqXHR.responseJSON.error);
+                    $('#statusMsg').addClass('msg-error');
+                }
+            }
+        });
+
+    }
 
     sqlEditor.commands.addCommand({
         name: 'runQuery',
         bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
         exec: function (editor) {
-            var query = editor.getValue();
-            if (typeof(Storage) !== "undefined") {
-                localStorage.setItem("lastQuery", query);
-            }
-            if (lastRequest) {
-                lastRequest.abort();
-            }
-
-            lastRequest = $.get('/js', { query: query }, function (response) {
-                if (response.error) {
-                    alert(response.error);
-                } else {
-
-                    var columns = [];
-                    response.columns.forEach(function(col) {
-                        columns.push({ id: col.name, name: col.name, field: col.name });
-                    });
-
-                    grid.setColumns(columns);
-                    grid.setData(response.result);
-                    grid.updateRowCount();
-                    // dataView.setItems(newData, "Id");
-                    grid.autosizeColumns();
-                    grid.render();
-                    grid.resizeCanvas();
-                }
-            }).fail(function (jqXHR, textStatus) {
-                if (jqXHR.status == 400) {
-                    alert(jqXHR.responseJSON.error);
-                }
-            });
+            exeRun(editor);
         }
+    });
+
+    $('#btn_run').click(function() {
+        exeRun(sqlEditor);
     });
 
     var top = $('#resultGrid').offset().top;
@@ -81,8 +95,6 @@ $(function() {
         $('#resultGrid').height(bodyheight - top);
         $('#resultGrid').css('height', (bodyheight - top) + 'px');
         grid.resizeCanvas();
-        // var vpTop = $("#resultGrid > .slick-viewport").offset().top;
-        // $("#resultGrid > .slick-viewport").css('height', (bodyheight - vpTop) + 'px');
     }
 
     $('.sp:not(.last)').resizable({

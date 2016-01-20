@@ -62,7 +62,6 @@ body {
 
 .row .sp.toolbar {
 	padding-bottom:30px;
-    height:240px;
 }
 
 .last {
@@ -530,15 +529,14 @@ input.editor-checkbox {
     padding: 0 15px 0 15px;
 }
 
-/*.slick-row.ui-widget-content, .slick-cell {
-    background: none;
-    background-color: #eeeeee;
-    color: #666666;
-    border: none;
-    border-bottom: solid 1px #ffffff;
-    font-size: 13px;
-    height: 40px;
-    line-height: 60px;
-    padding: 0 15px 0 15px;
-}*/
+#statusMsg {
+    padding: 0 15px 0 15px
+        
+}
+
+.msg-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
 

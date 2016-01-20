@@ -1,0 +1,26 @@
+{
+  "name": "NSFDB Amin UI",
+  "authors": [
+    "Alex Pelagenko"
+  ],
+  "description": "Need For Speed Database Admin UI",
+  "main": "public/index.html",
+  "moduleType": [],
+  "license": "Apache 2.0",
+  "homepage": "github.nfsdb.org",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ace-builds": "~1.2.3",
+    "bootstrap-css-only": "~3.3.6",
+    "slickgrid": "~2.1.0",
+    "jquery": "~2.2.0",
+    "jquery-ui": "~1.11.4"
+  }
+}

@@ -7,19 +7,11 @@
 
         <title>NFSdb - Query</title>
 
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-        <link href="" type="text/css" rel="stylesheet">
-        <!--[if lt IE 9]>
-            <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-        
-        <link href="//code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" type="text/css" rel="stylesheet" media="all">    
-        
-        <link rel="stylesheet" href="slickgrid/slick.grid.css" type="text/css" />
-        <link rel="stylesheet" href="slickgrid/css/smoothness/jquery-ui-1.11.3.custom.css" type="text/css" />
-        <!--<link rel="stylesheet" href="slickgrid/examples/examples.css" type="text/css" />-->
+        <link href="bower_components/bootstrap-css-only/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="bower_components/slickgrid/slick.grid.css" type="text/css" />
+        <link rel="stylesheet" href="bower_components/slickgrid/css/smoothness/jquery-ui-1.11.3.custom.css" type="text/css" />
 
-        <!-- Custom styles for this template -->
         <link href="theme.css" rel="stylesheet">
     </head>
     <body>
@@ -39,18 +31,17 @@
 
         <div class="wrapper">
             <div class="outer">
+                <div class="row" style="padding: 10px 0 0 25px; border-bottom: 1px solid #ddd;">
+                    <div class="col-md-1">
+                        <button class="btn btn-primary btn-xs" id="btn_run">Run (Ctrl-Enter)</button>
+                    </div>
+                    <div class="col-md-8">
+                        <p id="statusMsg">&nbsp;</p>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-12 sp tab-pane" id="sqlPane">
-                        <div style="padding:3px;height:28px;">
-                            <button class="btn btn-primary btn-xs">Mini</button>
-                            <button class="btn btn-primary btn-xs">Minimore</button>
-                            <button class="btn btn-primary btn-xs">Foo</button>
-                            <button class="btn btn-primary btn-xs">Blahblah</button>
-                            <button class="btn btn-primary btn-xs">Mini</button>
-                            <button class="btn btn-primary btn-xs">Foo</button>
-                        </div>
-                        <div class="inner" id="sqlEditor">
-                        </div>
+                        <div class="inner" id="sqlEditor"></div>
                     </div>
                 </div>
                 <div class="row">
@@ -61,18 +52,13 @@
             </div><!--/outer-->
         </div><!--/wrapper-->
 
-
-        <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.js"></script>
-        <script type='text/javascript' src="//code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
-        <script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-        <script type='text/javascript' src="ace/src-min-noconflict/ace.js"></script>
-        <script type='text/javascript' src="ace/src-min-noconflict/ext-language_tools.js"></script>
-        <script src="query.js"></script>
-
-
-        <!--<script src="slickgrid/lib/jquery-1.11.2.min.js"></script>-->
-        <script src="slickgrid/lib/jquery.event.drag-2.2.js"></script>
-        <script src="slickgrid/slick.core.js"></script>
-        <script src="slickgrid/slick.grid.js"></script>
+        <script type='text/javascript' src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script type='text/javascript' src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+        <script type='text/javascript' src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+        <script type='text/javascript' src="bower_components/ace-builds/src-min-noconflict/ext-language_tools.js"></script>
+        <script type='text/javascript' src="bower_components/slickgrid/lib/jquery.event.drag-2.2.js"></script>
+        <script type='text/javascript' src="bower_components/slickgrid/slick.core.js"></script>
+        <script type='text/javascript' src="bower_components/slickgrid/slick.grid.js"></script>
+        <script type='text/javascript' src="query.js"></script>
     </body>
 </html>
