@@ -47,7 +47,7 @@ $(function() {
         }
 
         queryStart = new Date().getTime();
-        lastRequest = $.get('/js', { query: query }, function (response) {
+        lastRequest = $.get('/js', { query: query, limit:1000 }, function (response) {
             if (response.error) {
                 alert(response.error);
             } else {
@@ -57,7 +57,12 @@ $(function() {
                     columns.push({ id: col.name, name: col.name, field: col.name });
                 });
                 $('#statusMsg').removeClass('msg-error');
-                $('#statusMsg').text(response.result.length + ' rows retuned in ' + duration + ' ms');
+                var status = response.result.length + ' rows retuned in ' + duration + ' ms';
+                if (response.moreExist) {
+                    status += ". More records exist";
+                }
+                $('#statusMsg').text(status);
+
                 grid.setColumns(columns);
                 grid.setData(response.result);
                 grid.updateRowCount();
