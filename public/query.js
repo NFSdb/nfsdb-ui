@@ -32,49 +32,76 @@ $(function() {
         enableColumnReorder: false
     };
 
+
+    var loader = new Slick.Data.RemoteModel();
     var grid = new Slick.Grid("#resultGrid", [], [], options);
     grid.resizeCanvas();
+    grid.onViewportChanged.subscribe(function (e, args) {
+        var vp = grid.getViewport();
+        loader.ensureData(vp.top, vp.bottom);
+    });
+    
+    loader.onDataLoaded.subscribe(function (e, args) {
+        for (var i = args.from; i <= args.to; i++) {
+            grid.invalidateRow(i);
+        }
+
+        grid.render();
+        grid.resizeCanvas();
+
+    });
+
+    loader.onQueryExecuted.subscribe(function (e, args) {
+        for (var i = args.from; i <= args.to; i++) {
+            grid.invalidateRow(i);
+        }
+
+        $('#statusMsg').removeClass('msg-error');
+        var status = args.count + ' rows retuned in ' + args.duration + ' ms';
+        $('#statusMsg').text(status);
+
+        $('#statusMsg').text(status);
+        grid.setColumns(loader.columns);
+        grid.setData(loader.data);
+        grid.updateRowCount();
+        grid.autosizeColumns();
+        grid.render();
+        grid.resizeCanvas();
+
+    });
+
+    loader.onError.subscribe(function (e, args) {
+        $('#statusMsg').text(args.error);
+        $('#statusMsg').addClass('msg-error');
+
+        grid.setColumns([]);
+        grid.setData([]);
+        grid.updateRowCount();
+        grid.render();
+    });
+
     var lastRequest = null;
     var queryStart;
 
     var exeRun = function(editor) {
         var query = editor.getValue();
+        grid.scrollRowIntoView(0);
+        loader.setSearch(query);
+
         if (typeof (Storage) !== "undefined") {
             localStorage.setItem("lastQuery", query);
         }
-        if (lastRequest) {
-            lastRequest.abort();
-        }
 
-        queryStart = new Date().getTime();
         lastRequest = $.get('/js', { query: query, limit:1000 }, function (response) {
             if (response.error) {
                 alert(response.error);
             } else {
                 var duration = (new Date().getTime() - queryStart);
-                var columns = [];
-                response.columns.forEach(function (col) {
-                    columns.push({ id: col.name, name: col.name, field: col.name });
-                });
-                $('#statusMsg').removeClass('msg-error');
-                var status = response.result.length + ' rows retuned in ' + duration + ' ms';
-                if (response.moreExist) {
-                    status += ". More records exist";
-                }
-                $('#statusMsg').text(status);
-
-                grid.setColumns(columns);
-                grid.setData(response.result);
-                grid.updateRowCount();
-                grid.autosizeColumns();
-                grid.render();
-                grid.resizeCanvas();
+                
             }
         }).fail(function (jqXHR, textStatus) {
             if (jqXHR.status == 400) {
                 if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-                    $('#statusMsg').text(jqXHR.responseJSON && jqXHR.responseJSON.error);
-                    $('#statusMsg').addClass('msg-error');
                 }
             }
         });
