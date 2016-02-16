@@ -6,8 +6,6 @@
         var data = { length: 0 };
         var columns = [];
         var searchstr = "";
-        var sortcol = null;
-        var sortdir = 1;
         var h_request = null;
         var currentSearchstr = true;
         var req = null; // ajax request
@@ -43,16 +41,12 @@
             while (columns.length > 0) {
                 columns.pop();
             }
+            loadingFrom = 0;
+            loadingTo = 0;
         }
 
 
         function ensureData(fromRow, to) {
-            if (req) {
-                req.abort();
-                for (var i = req.fromPage; i <= req.toPage; i++)
-                    data[i * PAGESIZE] = undefined;
-            }
-
             if (fromRow < 0) {
                 fromRow = 0;
             }
@@ -77,6 +71,15 @@
             }
             var fromRowLoading = (fromPage * PAGESIZE);
             var toRowLoading = fromRowLoading + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+
+            if (req && (req.fromPage != fromPage || req.toPage != toPage)) {
+                req.abort();
+                for (var i = req.fromPage; i <= req.toPage; i++) {
+                    if (data[i * PAGESIZE] == null) {
+                        data[i * PAGESIZE] = undefined;
+                    }
+                }
+            }
 
             if (h_request != null) {
                 clearTimeout(h_request);

@@ -261,9 +261,9 @@ input[type=radio], input[type=checkbox] {
 	
 }
 
-::-webkit-scrollbar {
+/*::-webkit-scrollbar {
     width: 0.9em;
-}
+}*/
 
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -304,6 +304,10 @@ input[type=radio], input[type=checkbox] {
   font-size: 12pt;
 }
 
+#resultGrid .slick-viewport {
+    overflow-x: scroll !important;
+    overflow-y: scroll !important;
+}
 
 .grid-header {
   border: 1px solid gray;
@@ -522,7 +526,7 @@ input.editor-checkbox {
     background: none;
     background-color: #eeeeee;
     color: #666666;
-    border: none;
+    /*border: none;*/
     border-bottom: solid 1px #ffffff;
     font-size: 13px;
     height: 40px;
@@ -540,3 +544,13 @@ input.editor-checkbox {
     border-color: #ebccd1;
 }
 
+.slick-cell.active {
+    border-color: #959595;
+    border: solid;
+
+}
+
+.slick-cell.selected {
+    /*background-color: #656565;
+    color: #F0F0F0;*/
+}

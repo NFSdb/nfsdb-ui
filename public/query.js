@@ -29,12 +29,24 @@ $(function() {
 
     var options = {
         enableCellNavigation: true,
-        enableColumnReorder: false
+        enableColumnReorder: false,
+        enableTextSelectionOnCells: true
     };
-
-
+    
     var loader = new Slick.Data.RemoteModel();
     var grid = new Slick.Grid("#resultGrid", [], [], options);
+    grid.setSelectionModel(new Slick.CellSelectionModel());
+    var copyManager = new Slick.CellCopyManager();
+    grid.registerPlugin(copyManager);
+
+    sqlEditor.commands.addCommand({
+        name: "Paste",
+        exec: function() {
+            i = 0;
+        },
+        bindKey: { mac: "cmd-v", win: "ctrl-v" }
+    });
+
     grid.resizeCanvas();
     grid.onViewportChanged.subscribe(function (e, args) {
         var vp = grid.getViewport();
@@ -47,7 +59,7 @@ $(function() {
         }
 
         grid.render();
-        grid.resizeCanvas();
+        // grid.resizeCanvas();
 
     });
 
@@ -66,7 +78,6 @@ $(function() {
         grid.updateRowCount();
         grid.autosizeColumns();
         grid.render();
-        grid.resizeCanvas();
 
     });
 
@@ -127,6 +138,7 @@ $(function() {
         $('#resultGrid').height(bodyheight - top);
         $('#resultGrid').css('height', (bodyheight - top) + 'px');
         grid.resizeCanvas();
+        grid.render();
     }
 
     $('.sp:not(.last)').resizable({
