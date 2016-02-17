@@ -554,3 +554,12 @@ input.editor-checkbox {
     /*background-color: #656565;
     color: #F0F0F0;*/
 }
+
+
+#resultGrid div.slick-cell::selection{
+    background: transparent;
+}
+
+#resultGrid div.slick-cell::-moz-selection{
+    background: transparent;
+}

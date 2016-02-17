@@ -1,4 +1,21 @@
-﻿
+﻿jQuery.fn.selectText = function () {
+    var doc = document
+        , element = this[0]
+        , range, selection
+    ;
+    if (!element) return;
+    if (doc.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    } else if (window.getSelection) {
+        selection = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+};
 
 $(function() {
     var sqlEditor;
@@ -34,17 +51,12 @@ $(function() {
     };
     
     var loader = new Slick.Data.RemoteModel();
+    var gridElem = $("#resultGrid");
     var grid = new Slick.Grid("#resultGrid", [], [], options);
-    grid.setSelectionModel(new Slick.CellSelectionModel());
-    var copyManager = new Slick.CellCopyManager();
-    grid.registerPlugin(copyManager);
-
-    sqlEditor.commands.addCommand({
-        name: "Paste",
-        exec: function() {
-            i = 0;
-        },
-        bindKey: { mac: "cmd-v", win: "ctrl-v" }
+    var selectedModel = new Slick.CellSelectionModel();
+    grid.setSelectionModel(selectedModel);
+    selectedModel.onSelectedRangesChanged.subscribe(function () {
+        gridElem.find('div.slick-cell.selected').selectText();
     });
 
     grid.resizeCanvas();
@@ -59,7 +71,6 @@ $(function() {
         }
 
         grid.render();
-        // grid.resizeCanvas();
 
     });
 
@@ -129,6 +140,7 @@ $(function() {
 
     $('#btn_run').click(function() {
         exeRun(sqlEditor);
+        sqlEditor.focus();
     });
 
     var top = $('#resultGrid').offset().top;
