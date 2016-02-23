@@ -114,10 +114,31 @@
                         while (columns.length > 0) {
                             columns.pop();
                         }
-
-                        resp.columns.forEach(function(col) {
-                            columns.push({ id: col.name, name: col.name, field: col.name });
-                        });
+                        var cw = 8;
+                        var offset = 35;
+                        for (var c = 0; c < resp.columns.length; c++) {
+                            var col = resp.columns[c];
+                            var minWidth = cw * col.name.length + offset;
+                            if (col.type == "DOUBLE" || col.type == "LONG" || col.type == "FLOAT") {
+                                minWidth = Math.max(150, minWidth);
+                            } else if (col.type == "INT") {
+                                minWidth = Math.max(120, minWidth);
+                            } else if (col.type == "BYTE") {
+                                minWidth = Math.max(30, minWidth);
+                            } else if (col.type == "DATE") {
+                                minWidth = Math.max(150, minWidth);
+                            } else if (col.type == "SHORT") {
+                                minWidth = Math.max(100, minWidth);
+                            } else if (col.type == "STRING" || col.type == "SYMBOL") {
+                                for (var d = 0; d < resp.result.length; d++) {
+                                    var str = resp.result[d][col.name];
+                                    if (str && (str.length * cw + offset > minWidth)) {
+                                        minWidth = str.length * cw + offset;
+                                    }
+                                }
+                            }
+                            columns.push({ id: col.name, name: col.name, field: col.name, minWidth: minWidth });
+                        }
 
                         onQueryExecuted.notify({ from: from, to: to, count: resp.totalCount, duration: duration });
                     } else {
@@ -128,7 +149,7 @@
                     if (currentSearchstr != searchstr) {
                         if (jqXHR.status == 400) {
                             if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-                                onError.notify({ error: jqXHR.responseJSON.error });
+                                onError.notify({ position: jqXHR.responseJSON.position, error: jqXHR.responseJSON.error });
                                 return;
                             }
                         }
@@ -162,6 +183,10 @@
             ensureData(0, PAGESIZE);
         }
 
+        function getSearch() {
+            return searchstr;
+        }
+
 
         init();
 
@@ -177,6 +202,7 @@
             "reloadData": reloadData,
             "setSort": setSort,
             "setSearch": setSearch,
+            "getSearch": getSearch,
 
             // events
             "onDataLoading": onDataLoading,

@@ -1,8 +1,8 @@
-﻿jQuery.fn.selectText = function () {
-    var doc = document
-        , element = this[0]
-        , range, selection
-    ;
+﻿jQuery.fn.selectText = function() {
+    var doc = document,
+        element = this[0],
+        range,
+        selection;
     if (!element) return;
     if (doc.body.createTextRange) {
         range = document.body.createTextRange();
@@ -28,6 +28,7 @@ $(function() {
         enableBasicAutocompletion: true,
         enableSnippets: true
     });
+
     sqlEditor.commands.on("afterExec", function(e) {
         // activate autocomplete when paren or .(dot) is typed
         if (e.command.name == "insertstring" && /^[\\.\(.]$/.test(e.args)) {
@@ -49,23 +50,23 @@ $(function() {
         enableColumnReorder: false,
         enableTextSelectionOnCells: true
     };
-    
+
     var loader = new Slick.Data.RemoteModel();
     var gridElem = $("#resultGrid");
     var grid = new Slick.Grid("#resultGrid", [], [], options);
-    var selectedModel = new Slick.CellSelectionModel();
-    grid.setSelectionModel(selectedModel);
-    selectedModel.onSelectedRangesChanged.subscribe(function () {
-        gridElem.find('div.slick-cell.selected').selectText();
+    gridElem.dblclick(function(el) {
+        if (el.target) {
+            $(el.target).selectText();
+        }
     });
 
     grid.resizeCanvas();
-    grid.onViewportChanged.subscribe(function (e, args) {
+    grid.onViewportChanged.subscribe(function(e, args) {
         var vp = grid.getViewport();
         loader.ensureData(vp.top, vp.bottom);
     });
-    
-    loader.onDataLoaded.subscribe(function (e, args) {
+
+    loader.onDataLoaded.subscribe(function(e, args) {
         for (var i = args.from; i <= args.to; i++) {
             grid.invalidateRow(i);
         }
@@ -74,7 +75,7 @@ $(function() {
 
     });
 
-    loader.onQueryExecuted.subscribe(function (e, args) {
+    loader.onQueryExecuted.subscribe(function(e, args) {
         for (var i = args.from; i <= args.to; i++) {
             grid.invalidateRow(i);
         }
@@ -87,13 +88,30 @@ $(function() {
         grid.setColumns(loader.columns);
         grid.setData(loader.data);
         grid.updateRowCount();
-        grid.autosizeColumns();
         grid.render();
-
     });
 
-    loader.onError.subscribe(function (e, args) {
-        $('#statusMsg').text(args.error);
+    loader.onError.subscribe(function(e, args) {
+        var msg = "";
+        if (args.position || args.position == 0) {
+            // Find line.
+            var query = loader.getSearch();
+            var line = 1;
+            var linePos = 1;
+            for (var i = 0; i < Math.min(query.length, args.position); i++) {
+                if (query.charAt(i) == "\n") {
+                    line++;
+                    linePos = 1;
+                } else {
+                    linePos++;
+                }
+
+            }
+
+            msg += "(" + line + ", " + linePos + ") ";
+        }
+
+        $('#statusMsg').text(msg + args.error);
         $('#statusMsg').addClass('msg-error');
 
         grid.setColumns([]);
@@ -101,9 +119,6 @@ $(function() {
         grid.updateRowCount();
         grid.render();
     });
-
-    var lastRequest = null;
-    var queryStart;
 
     var exeRun = function(editor) {
         var query = editor.getValue();
@@ -113,27 +128,11 @@ $(function() {
         if (typeof (Storage) !== "undefined") {
             localStorage.setItem("lastQuery", query);
         }
-
-        lastRequest = $.get('/js', { query: query, limit:1000 }, function (response) {
-            if (response.error) {
-                alert(response.error);
-            } else {
-                var duration = (new Date().getTime() - queryStart);
-                
-            }
-        }).fail(function (jqXHR, textStatus) {
-            if (jqXHR.status == 400) {
-                if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-                }
-            }
-        });
-
-    }
-
+    };
     sqlEditor.commands.addCommand({
         name: 'runQuery',
         bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
-        exec: function (editor) {
+        exec: function(editor) {
             exeRun(editor);
         }
     });
@@ -146,13 +145,12 @@ $(function() {
     var top = $('#resultGrid').offset().top;
     var bodyheight = $(document).height();
 
-    var reseizeGrid = function () {
+    var reseizeGrid = function() {
         $('#resultGrid').height(bodyheight - top);
         $('#resultGrid').css('height', (bodyheight - top) + 'px');
         grid.resizeCanvas();
         grid.render();
-    }
-
+    };
     $('.sp:not(.last)').resizable({
         handles: 's',
         start: function(event, ui) {
@@ -185,7 +183,7 @@ $(function() {
         }
     });
 
-    $(window).resize(function () {
+    $(window).resize(function() {
         bodyheight = $(document).height();
         reseizeGrid();
     }).resize();

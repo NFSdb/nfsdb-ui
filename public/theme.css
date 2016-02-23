@@ -544,11 +544,11 @@ input.editor-checkbox {
     border-color: #ebccd1;
 }
 
-.slick-cell.active {
+/*.slick-cell.active {
     border-color: #959595;
     border: solid;
 
-}
+}*/
 
 .slick-cell.selected {
     /*background-color: #656565;
@@ -556,10 +556,10 @@ input.editor-checkbox {
 }
 
 
-#resultGrid div.slick-cell::selection{
+/*#resultGrid div.slick-cell::selection{
     background: transparent;
 }
 
 #resultGrid div.slick-cell::-moz-selection{
     background: transparent;
-}
+}*/
