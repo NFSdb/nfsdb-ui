@@ -14,9 +14,7 @@
         var onDataLoading = new Slick.Event();
         var onDataLoaded = new Slick.Event();
         var onError = new Slick.Event();
-
         var onQueryExecuted = new Slick.Event();
-
 
         function init() {
         }
@@ -35,16 +33,17 @@
 
         function clear() {
             for (var key in data) {
-                delete data[key];
+                if (data.hasOwnProperty(key)) {
+                    delete data[key];
+                }
             }
             data.length = 0;
             while (columns.length > 0) {
                 columns.pop();
             }
-            loadingFrom = 0;
-            loadingTo = 0;
+            //loadingFrom = 0;
+            //loadingTo = 0;
         }
-
 
         function ensureData(fromRow, to) {
             if (fromRow < 0) {

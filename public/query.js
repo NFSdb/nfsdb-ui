@@ -17,6 +17,9 @@
     }
 };
 
+var gridElem = $("#resultGrid");
+var statusElem = $('#statusMsg');
+
 $(function() {
     var sqlEditor;
 
@@ -51,9 +54,8 @@ $(function() {
         enableTextSelectionOnCells: true
     };
 
-    var loader = new Slick.Data.RemoteModel();
-    var gridElem = $("#resultGrid");
-    var grid = new Slick.Grid("#resultGrid", [], [], options);
+    var model = new Slick.Data.RemoteModel();
+    var grid = new Slick.Grid(gridElem, [], [], options);
     gridElem.dblclick(function(el) {
         if (el.target) {
             $(el.target).selectText();
@@ -61,12 +63,12 @@ $(function() {
     });
 
     grid.resizeCanvas();
-    grid.onViewportChanged.subscribe(function(e, args) {
+    grid.onViewportChanged.subscribe(function() {
         var vp = grid.getViewport();
-        loader.ensureData(vp.top, vp.bottom);
+        model.ensureData(vp.top, vp.bottom);
     });
 
-    loader.onDataLoaded.subscribe(function(e, args) {
+    model.onDataLoaded.subscribe(function(e, args) {
         for (var i = args.from; i <= args.to; i++) {
             grid.invalidateRow(i);
         }
@@ -75,27 +77,24 @@ $(function() {
 
     });
 
-    loader.onQueryExecuted.subscribe(function(e, args) {
+    model.onQueryExecuted.subscribe(function(e, args) {
         for (var i = args.from; i <= args.to; i++) {
             grid.invalidateRow(i);
         }
 
-        $('#statusMsg').removeClass('msg-error');
-        var status = args.count + ' rows retuned in ' + args.duration + ' ms';
-        $('#statusMsg').text(status);
-
-        $('#statusMsg').text(status);
-        grid.setColumns(loader.columns);
-        grid.setData(loader.data);
+        statusElem.removeClass('msg-error');
+        statusElem.text(args.count + ' rows retuned in ' + args.duration + ' ms');
+        grid.setColumns(model.columns);
+        grid.setData(model.data);
         grid.updateRowCount();
         grid.render();
     });
 
-    loader.onError.subscribe(function(e, args) {
+    model.onError.subscribe(function(e, args) {
         var msg = "";
         if (args.position || args.position == 0) {
             // Find line.
-            var query = loader.getSearch();
+            var query = model.getSearch();
             var line = 1;
             var linePos = 1;
             for (var i = 0; i < Math.min(query.length, args.position); i++) {
@@ -111,8 +110,8 @@ $(function() {
             msg += "(" + line + ", " + linePos + ") ";
         }
 
-        $('#statusMsg').text(msg + args.error);
-        $('#statusMsg').addClass('msg-error');
+        statusElem.text(msg + args.error);
+        statusElem.addClass('msg-error');
 
         grid.setColumns([]);
         grid.setData([]);
@@ -123,7 +122,7 @@ $(function() {
     var exeRun = function(editor) {
         var query = editor.getValue();
         grid.scrollRowIntoView(0);
-        loader.setSearch(query);
+        model.setSearch(query);
 
         if (typeof (Storage) !== "undefined") {
             localStorage.setItem("lastQuery", query);
@@ -146,17 +145,18 @@ $(function() {
     var bodyheight = $(document).height();
 
     var reseizeGrid = function() {
-        $('#resultGrid').height(bodyheight - top);
-        $('#resultGrid').css('height', (bodyheight - top) + 'px');
+        gridElem.height(bodyheight - top);
+        gridElem.css('height', (bodyheight - top) + 'px');
         grid.resizeCanvas();
         grid.render();
     };
+
     $('.sp:not(.last)').resizable({
         handles: 's',
-        start: function(event, ui) {
+        start: function() {
             $('iframe').css('pointer-events', 'none');
         },
-        stop: function(event, ui) {
+        stop: function() {
             $('iframe').css('pointer-events', 'auto');
         },
         resize: function(event, ui) {
@@ -172,13 +172,12 @@ $(function() {
                 return;
             }
 
-            $.each(ele.siblings(), function(idx, item) {
+            $.each(ele.siblings(), function(idx) {
                 ele.siblings().eq(idx).css('height', y + 'px');
             });
 
 
             sqlEditor.resize();
-            top = $('#resultGrid').offset().top;
             reseizeGrid();
         }
     });

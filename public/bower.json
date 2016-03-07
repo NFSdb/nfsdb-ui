@@ -21,7 +21,8 @@
     "bootstrap-css-only": "~3.3.6",
     "jquery": "~2.2.0",
     "jquery-ui": "~1.11.4",
-    "slickgrid": "https://github.com/6pac/SlickGrid.git"
+    "slickgrid": "https://github.com/6pac/SlickGrid.git",
+    "source-code-pro": "git://github.com/adobe-fonts/source-code-pro.git#release"
   },
   "overrides": {
     "slickgrid": {
