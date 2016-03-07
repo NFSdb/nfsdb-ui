@@ -26,11 +26,10 @@ $(function() {
     ace.require("ace/ext/language_tools");
     sqlEditor = ace.edit("sqlEditor");
     sqlEditor.getSession().setMode("ace/mode/sql");
-    sqlEditor.setTheme("ace/theme/Merbivore");
+    //sqlEditor.setTheme("ace/theme/Merbivore");
     sqlEditor.setOptions({
         enableBasicAutocompletion: false,
         enableSnippets: true,
-        fontFamily: "Source Code Pro",
         fontSize: "11pt"
     });
 
