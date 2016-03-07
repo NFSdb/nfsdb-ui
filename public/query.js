@@ -26,18 +26,24 @@ $(function() {
     ace.require("ace/ext/language_tools");
     sqlEditor = ace.edit("sqlEditor");
     sqlEditor.getSession().setMode("ace/mode/sql");
-    sqlEditor.setTheme("ace/theme/textmate");
+    sqlEditor.setTheme("ace/theme/Merbivore");
     sqlEditor.setOptions({
-        enableBasicAutocompletion: true,
-        enableSnippets: true
+        enableBasicAutocompletion: false,
+        enableSnippets: true,
+        fontFamily: "Source Code Pro",
+        fontSize: "11pt"
     });
 
+
+/*
     sqlEditor.commands.on("afterExec", function(e) {
         // activate autocomplete when paren or .(dot) is typed
         if (e.command.name == "insertstring" && /^[\\.\(.]$/.test(e.args)) {
             sqlEditor.execCommand("startAutocomplete");
         }
     });
+*/
+
     sqlEditor.setShowPrintMargin(false);
     sqlEditor.setDisplayIndentGuides(false);
     sqlEditor.setHighlightActiveLine(false);
@@ -72,9 +78,7 @@ $(function() {
         for (var i = args.from; i <= args.to; i++) {
             grid.invalidateRow(i);
         }
-
         grid.render();
-
     });
 
     model.onQueryExecuted.subscribe(function(e, args) {
@@ -120,14 +124,20 @@ $(function() {
     });
 
     var exeRun = function(editor) {
-        var query = editor.getValue();
+
+        var query = editor.getSelectedText();
+        if (query == null || query == "") {
+            query = editor.getValue();
+        }
+
         grid.scrollRowIntoView(0);
         model.setSearch(query);
 
         if (typeof (Storage) !== "undefined") {
-            localStorage.setItem("lastQuery", query);
+            localStorage.setItem("lastQuery", editor.getValue());
         }
     };
+
     sqlEditor.commands.addCommand({
         name: 'runQuery',
         bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
@@ -142,11 +152,11 @@ $(function() {
     });
 
     var top = $('#resultGrid').offset().top;
-    var bodyheight = $(document).height();
+    var bodyHeight = $(document).height();
 
-    var reseizeGrid = function() {
-        gridElem.height(bodyheight - top);
-        gridElem.css('height', (bodyheight - top) + 'px');
+    var resizeGrid = function() {
+        gridElem.height(bodyHeight - top);
+        gridElem.css('height', (bodyHeight - top) + 'px');
         grid.resizeCanvas();
         grid.render();
     };
@@ -168,7 +178,7 @@ $(function() {
             if (x == par) {
                 sqlEditor.resize();
                 top = $('#resultGrid').offset().top;
-                reseizeGrid();
+                resizeGrid();
                 return;
             }
 
@@ -178,13 +188,13 @@ $(function() {
 
 
             sqlEditor.resize();
-            reseizeGrid();
+            resizeGrid();
         }
     });
 
     $(window).resize(function() {
-        bodyheight = $(document).height();
-        reseizeGrid();
+        bodyHeight = $(document).height();
+        resizeGrid();
     }).resize();
 
 });

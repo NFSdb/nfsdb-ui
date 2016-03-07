@@ -402,37 +402,6 @@ input[type=radio], input[type=checkbox] {
     -webkit-border-radius: 3px;
 }
 
-/* Slick.Editors.Text, Slick.Editors.Date */
-input.editor-text {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    margin: 0;
-    background: transparent;
-    outline: 0;
-    padding: 0;
-
-}
-
-.ui-datepicker-trigger {
-    margin-top: 2px;
-    padding: 0;
-    vertical-align: top;
-}
-
-/* Slick.Editors.PercentComplete */
-input.editor-percentcomplete {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    margin: 0;
-    background: transparent;
-    outline: 0;
-    padding: 0;
-
-    float: left;
-}
-
 .slickgrid {
     background-color: #eeeeee;
 }
@@ -450,15 +419,14 @@ input.editor-percentcomplete {
     font-size: 12px;
     height: 30px;
     line-height: 30px;
-    padding: 0 15px 0 15px;
+    padding: 0 5px 0 5px;
 }
 
 .slick-cell {
     color: #666666;
     font-family: "Source Code Pro", monospace;
     font-size: 12px;
-    /*height: 40px;*/
-    padding: 0 15px 0 15px;
+    padding: 2px 5px 0 5px;
 }
 
 #statusMsg {
@@ -473,6 +441,7 @@ input.editor-percentcomplete {
 
 .slick-cell.active {
     border: 3px solid #1b6d85;
+    padding: 0 3px 0 3px;
 }
 
 .slick-row.odd div {

@@ -1,71 +1,70 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>NFSdb - Query</title>
+    <title>NFSdb - Query</title>
 
-        <link href="bower_components/bootstrap-css-only/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="bower_components/slickgrid/slick.grid.css" type="text/css" />
-        <link rel="stylesheet" href="bower_components/slickgrid/css/smoothness/jquery-ui-1.11.3.custom.css" type="text/css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-css-only/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css" type="text/css"/>
+    <link rel="stylesheet" href="bower_components/slickgrid/slick.grid.css" type="text/css"/>
+    <link rel="stylesheet" href="bower_components/slickgrid/css/smoothness/jquery-ui-1.11.3.custom.css"
+          type="text/css"/>
+    <link rel="stylesheet" href="theme.css" type="text/css">
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">NFSdb</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Query</a></li>
+                <li><a href="upload.html">Upload</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
 
-        <link href="theme.css" rel="stylesheet">
-    </head>
-    <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">NFSdb</a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Query</a></li>
-                        <li><a href="upload.html">Upload</a></li>
-                    </ul>
-                </div><!--/.nav-collapse -->
+<div class="wrapper">
+    <div class="outer">
+        <div class="row" style="padding: 10px 0 0 25px; border-bottom: 1px solid #ddd;">
+            <div class="col-md-1">
+                <button class="btn btn-primary btn-xs" id="btn_run">Run (Ctrl-Enter)</button>
             </div>
-        </nav>
+            <div class="col-md-8">
+                <p id="statusMsg">&nbsp;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 sp tab-pane" id="sqlPane">
+                <div class="inner" id="sqlEditor"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 sp last">
+                <div class="inner slickgrid" id="resultGrid"></div>
+            </div>
+        </div>
+    </div><!--/outer-->
+</div><!--/wrapper-->
 
-        <div class="wrapper">
-            <div class="outer">
-                <div class="row" style="padding: 10px 0 0 25px; border-bottom: 1px solid #ddd;">
-                    <div class="col-md-1">
-                        <button class="btn btn-primary btn-xs" id="btn_run">Run (Ctrl-Enter)</button>
-                    </div>
-                    <div class="col-md-8">
-                        <p id="statusMsg">&nbsp;</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 sp tab-pane" id="sqlPane">
-                        <div class="inner" id="sqlEditor"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 sp last">
-                        <div class="inner slickgrid" id="resultGrid"></div>
-                    </div>
-                </div>
-            </div><!--/outer-->
-        </div><!--/wrapper-->
+<script type='text/javascript' src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type='text/javascript' src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script type='text/javascript' src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+<script type='text/javascript' src="bower_components/ace-builds/src-min-noconflict/ext-language_tools.js"></script>
+<script type='text/javascript' src="bower_components/slickgrid/lib/jquery.event.drag-2.2.js"></script>
+<script type='text/javascript' src="bower_components/slickgrid/slick.core.js"></script>
+<script type='text/javascript' src="bower_components/slickgrid/slick.grid.js"></script>
 
-        <script type='text/javascript' src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script type='text/javascript' src="bower_components/jquery-ui/jquery-ui.min.js"></script>
-        <script type='text/javascript' src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
-        <script type='text/javascript' src="bower_components/ace-builds/src-min-noconflict/ext-language_tools.js"></script>
-        <script type='text/javascript' src="bower_components/slickgrid/lib/jquery.event.drag-2.2.js"></script>
-        <script type='text/javascript' src="bower_components/slickgrid/slick.core.js"></script>
-        <script type='text/javascript' src="bower_components/slickgrid/slick.grid.js"></script>
+<script type='text/javascript' src="bower_components/slickgrid/plugins/slick.cellrangedecorator.js"></script>
+<script type='text/javascript' src="bower_components/slickgrid/plugins/slick.cellrangeselector.js"></script>
+<script type='text/javascript' src="bower_components/slickgrid/plugins/slick.cellselectionmodel.js"></script>
 
-        <script type='text/javascript' src="bower_components/slickgrid/plugins/slick.cellrangedecorator.js"></script>
-        <script type='text/javascript' src="bower_components/slickgrid/plugins/slick.cellrangeselector.js"></script>
-        <script type='text/javascript' src="bower_components/slickgrid/plugins/slick.cellselectionmodel.js"></script>
-
-        <script type='text/javascript' src="bower_components/source-code-pro"></script>
-        <script type='text/javascript' src="slick.remotemodel.js"></script>
-        <script type='text/javascript' src="query.js"></script>
-    </body>
+<script type='text/javascript' src="slick.remotemodel.js"></script>
+<script type='text/javascript' src="query.js"></script>
+</body>
 </html>
