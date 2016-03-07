@@ -1,4 +1,4 @@
-﻿jQuery.fn.selectText = function() {
+﻿jQuery.fn.selectText = function () {
     var doc = document,
         element = this[0],
         range,
@@ -17,10 +17,10 @@
     }
 };
 
-var gridElem = $("#resultGrid");
+var gridElem = $('#resultGrid');
 var statusElem = $('#statusMsg');
 
-$(function() {
+$(function () {
     var sqlEditor;
 
     ace.require("ace/ext/language_tools");
@@ -34,14 +34,14 @@ $(function() {
     });
 
 
-/*
-    sqlEditor.commands.on("afterExec", function(e) {
-        // activate autocomplete when paren or .(dot) is typed
-        if (e.command.name == "insertstring" && /^[\\.\(.]$/.test(e.args)) {
-            sqlEditor.execCommand("startAutocomplete");
-        }
-    });
-*/
+    /*
+     sqlEditor.commands.on("afterExec", function(e) {
+     // activate autocomplete when paren or .(dot) is typed
+     if (e.command.name == "insertstring" && /^[\\.\(.]$/.test(e.args)) {
+     sqlEditor.execCommand("startAutocomplete");
+     }
+     });
+     */
 
     sqlEditor.setShowPrintMargin(false);
     sqlEditor.setDisplayIndentGuides(false);
@@ -61,26 +61,26 @@ $(function() {
 
     var model = new Slick.Data.RemoteModel();
     var grid = new Slick.Grid(gridElem, [], [], options);
-    gridElem.dblclick(function(el) {
+    gridElem.dblclick(function (el) {
         if (el.target) {
             $(el.target).selectText();
         }
     });
 
     grid.resizeCanvas();
-    grid.onViewportChanged.subscribe(function() {
+    grid.onViewportChanged.subscribe(function () {
         var vp = grid.getViewport();
         model.ensureData(vp.top, vp.bottom);
     });
 
-    model.onDataLoaded.subscribe(function(e, args) {
+    model.onDataLoaded.subscribe(function (e, args) {
         for (var i = args.from; i <= args.to; i++) {
             grid.invalidateRow(i);
         }
         grid.render();
     });
 
-    model.onQueryExecuted.subscribe(function(e, args) {
+    model.onQueryExecuted.subscribe(function (e, args) {
         for (var i = args.from; i <= args.to; i++) {
             grid.invalidateRow(i);
         }
@@ -93,28 +93,27 @@ $(function() {
         grid.render();
     });
 
-    model.onError.subscribe(function(e, args) {
+    model.onError.subscribe(function (e, args) {
         var msg = "";
         if (args.position || args.position == 0) {
             // Find line.
             var query = model.getSearch();
             var line = 1;
-            var linePos = 1;
+            var linePos = 0;
             for (var i = 0; i < Math.min(query.length, args.position); i++) {
                 if (query.charAt(i) == "\n") {
                     line++;
-                    linePos = 1;
+                    linePos = 0;
                 } else {
                     linePos++;
                 }
 
             }
-
-            msg += "(" + line + ", " + linePos + ") ";
         }
 
-        statusElem.text(msg + args.error);
+        statusElem.text(args.error);
         statusElem.addClass('msg-error');
+        sqlEditor.gotoLine(line, linePos);
 
         grid.setColumns([]);
         grid.setData([]);
@@ -122,7 +121,7 @@ $(function() {
         grid.render();
     });
 
-    var exeRun = function(editor) {
+    var exeRun = function (editor) {
 
         var query = editor.getSelectedText();
         if (query == null || query == "") {
@@ -139,13 +138,13 @@ $(function() {
 
     sqlEditor.commands.addCommand({
         name: 'runQuery',
-        bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
-        exec: function(editor) {
+        bindKey: {win: 'Ctrl-Enter', mac: 'Command-Enter'},
+        exec: function (editor) {
             exeRun(editor);
         }
     });
 
-    $('#btn_run').click(function() {
+    $('#btn_run').click(function () {
         exeRun(sqlEditor);
         sqlEditor.focus();
     });
@@ -153,7 +152,7 @@ $(function() {
     var top = $('#resultGrid').offset().top;
     var bodyHeight = $(document).height();
 
-    var resizeGrid = function() {
+    var resizeGrid = function () {
         gridElem.height(bodyHeight - top);
         gridElem.css('height', (bodyHeight - top) + 'px');
         grid.resizeCanvas();
@@ -162,13 +161,13 @@ $(function() {
 
     $('.sp:not(.last)').resizable({
         handles: 's',
-        start: function() {
+        start: function () {
             $('iframe').css('pointer-events', 'none');
         },
-        stop: function() {
+        stop: function () {
             $('iframe').css('pointer-events', 'auto');
         },
-        resize: function(event, ui) {
+        resize: function (event, ui) {
             var x = ui.element.outerWidth();
             var y = ui.element.outerHeight();
             var par = $(this).parent().width();
@@ -181,7 +180,7 @@ $(function() {
                 return;
             }
 
-            $.each(ele.siblings(), function(idx) {
+            $.each(ele.siblings(), function (idx) {
                 ele.siblings().eq(idx).css('height', y + 'px');
             });
 
@@ -191,13 +190,13 @@ $(function() {
         }
     });
 
-    $(window).resize(function() {
+    $(window).resize(function () {
         bodyHeight = $(document).height();
         resizeGrid();
     }).resize();
 
 });
 
-$('.pane-settings').click(function() {
-    $(this).next('.pane-panel').toggle("slide", { direction: "right" }, 400);
+$('.pane-settings').click(function () {
+    $(this).next('.pane-panel').toggle("slide", {direction: "right"}, 400);
 });
