@@ -1,13 +1,15 @@
-(function($) {
+(function ($) {
+
+    var eventData = new Slick.EventData();
 
     function RemoteModel() {
         // private
         var PAGESIZE = 50;
-        var data = { length: 0 };
+        var data = {};
         var columns = [];
-        var searchstr = "";
+        var sqlText = "";
         var h_request = null;
-        var currentSearchstr = true;
+        var newSql = true;
         var req = null; // ajax request
 
         // events
@@ -15,10 +17,6 @@
         var onDataLoaded = new Slick.Event();
         var onError = new Slick.Event();
         var onQueryExecuted = new Slick.Event();
-
-        function init() {
-        }
-
 
         function isDataLoaded(from, to) {
             for (var i = from; i <= to; i++) {
@@ -29,7 +27,6 @@
 
             return true;
         }
-
 
         function clear() {
             for (var key in data) {
@@ -65,7 +62,7 @@
 
             if (fromPage > toPage || ((fromPage == toPage) && data[fromPage * PAGESIZE] !== undefined)) {
                 // TODO:  look-ahead
-                onDataLoaded.notify({ from: fromRow, to: to });
+                onDataLoaded.notify({from: fromRow, to: to});
                 return;
             }
             var fromRowLoading = (fromPage * PAGESIZE);
@@ -91,24 +88,27 @@
 
                 var queryStart = new Date().getTime();
                 var ff = fromRowLoading;
-                onDataLoading.notify({ from: fromRowLoading, to: toRowLoading });
+                onDataLoading.notify({from: fromRowLoading, to: toRowLoading});
 
-                req = $.get('/js', { query: searchstr, limit: fromRowLoading + "," + toRowLoading, withCount: (currentSearchstr !=  searchstr)}, function (resp) {
+                req = $.get('/js', {
+                    query: sqlText,
+                    limit: fromRowLoading + "," + toRowLoading,
+                    withCount: newSql
+                }, function (resp) {
 
                     var duration = (new Date().getTime() - queryStart);
                     var from = ff;
-                    var newRequest = false;
-                    if (currentSearchstr != resp.query) {
+                    if (newSql) {
                         data.length = Math.max(parseInt(resp.totalCount), resp.result.length);
-                        currentSearchstr = resp.query;
-                        newRequest = true;
+                        newSql = resp.query;
                     }
 
                     for (var i = 0; i < resp.result.length; i++) {
                         data[from + i] = resp.result[i];
                     }
 
-                    if (newRequest) {
+                    if (newSql) {
+                        newSql = false;
                         req = null;
                         while (columns.length > 0) {
                             columns.pop();
@@ -136,24 +136,30 @@
                                     }
                                 }
                             }
-                            columns.push({ id: col.name, name: col.name, field: col.name, minWidth: minWidth });
+                            columns.push({id: col.name, name: col.name, field: col.name, minWidth: minWidth});
                         }
 
-                        onQueryExecuted.notify({ from: from, to: to, count: resp.totalCount, duration: duration });
+                        onQueryExecuted.notify({
+                            from: from,
+                            to: to,
+                            count: resp.totalCount,
+                            duration: duration
+                        }, eventData, null);
                     } else {
-                        onDataLoaded.notify({ from: from, to: to});
+                        onDataLoaded.notify({from: from, to: to}, eventData, null);
                     }
 
                 }).fail(function (jqXHR, textStatus) {
-                    if (currentSearchstr != searchstr) {
-                        if (jqXHR.status == 400) {
-                            if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-                                onError.notify({ position: jqXHR.responseJSON.position, error: jqXHR.responseJSON.error });
-                                return;
-                            }
+                    if (jqXHR.status == 400) {
+                        if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+                            onError.notify({
+                                position: jqXHR.responseJSON.position,
+                                error: jqXHR.responseJSON.error
+                            }, eventData, null);
+                            return;
                         }
-                        onError.notify({ error: "Error. Server response code " + jqXHR.status });
                     }
+                    onError.notify({error: "Error. Server response code " + jqXHR.status + ", message = " + textStatus}, eventData, null);
                 });
 
                 req.fromPage = fromPage;
@@ -168,7 +174,6 @@
             ensureData(from, to);
         }
 
-
         function setSort(column, dir) {
             sortcol = column;
             sortdir = dir;
@@ -176,18 +181,15 @@
         }
 
         function setSearch(str) {
-            currentSearchstr = "";
-            searchstr = str;
+            newSql = true;
+            sqlText = str;
             clear();
             ensureData(0, PAGESIZE);
         }
 
         function getSearch() {
-            return searchstr;
+            return sqlText;
         }
-
-
-        init();
 
         return {
             // properties
@@ -211,6 +213,5 @@
         };
     }
 
-    // Slick.Data.RemoteModel
-    $.extend(true, window, { Slick: { Data: { RemoteModel: RemoteModel } } });
+    $.extend(true, window, {nfsDb: {Data: {Model: RemoteModel}}});
 })(jQuery);

@@ -57,8 +57,9 @@ body {
 .row .sp {
     height: 250px;
     min-height: 45px;
-    padding-right: 0;
-    padding-left: 0;
+    /*padding-right: 0;*/
+    /*padding-left: 0;*/
+    padding: 0 0 11pt 0;
     border-bottom: 4px solid transparent;
 }
 
@@ -118,26 +119,6 @@ input[type=radio], input[type=checkbox] {
     color: #000;
     padding: 4px;
     font-size: 12px;
-}
-
-.pane-panel .row > [class*='col-']:nth-child(1) {
-    background-color: rgba(240, 240, 240, .4);
-}
-
-.pane-panel .row > [class*='col-']:nth-child(2) {
-    background-color: rgba(240, 240, 240, .5);
-}
-
-.pane-panel .row > [class*='col-']:nth-child(3) {
-    background-color: rgba(240, 240, 240, .6);
-}
-
-.pane-panel .row > [class*='col-']:nth-child(4) {
-    background-color: rgba(240, 240, 240, .7);
-}
-
-.pane-panel .row > [class*='col-']:nth-child(5) {
-    background-color: rgba(240, 240, 240, .8);
 }
 
 .pane-label {

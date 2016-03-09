@@ -17,22 +17,27 @@
     }
 };
 
-var gridElem = $('#resultGrid');
-var statusElem = $('#statusMsg');
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
 
-$(function () {
-    var sqlEditor;
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
 
+var createSqlEditor = function () {
     ace.require("ace/ext/language_tools");
-    sqlEditor = ace.edit("sqlEditor");
+    var sqlEditor = ace.edit("sqlEditor");
     sqlEditor.getSession().setMode("ace/mode/sql");
-    //sqlEditor.setTheme("ace/theme/Merbivore");
+
     sqlEditor.setOptions({
         enableBasicAutocompletion: false,
         enableSnippets: true,
         fontSize: "11pt"
     });
-
 
     /*
      sqlEditor.commands.on("afterExec", function(e) {
@@ -53,14 +58,31 @@ $(function () {
 
     sqlEditor.focus();
 
-    var options = {
+    return sqlEditor;
+};
+
+var gridElem = $('#resultGrid');
+var statusElem = $('#statusMsg');
+
+
+$(function () {
+
+    var sqlEditor = createSqlEditor();
+
+    sqlEditor.commands.addCommand({
+        name: 'runQuery',
+        bindKey: {win: 'Ctrl-Enter', mac: 'Command-Enter'},
+        exec: function (editor) {
+            exeRun(editor);
+        }
+    });
+
+    var grid = new Slick.Grid(gridElem, [], [], {
         enableCellNavigation: true,
         enableColumnReorder: false,
         enableTextSelectionOnCells: true
-    };
+    });
 
-    var model = new Slick.Data.RemoteModel();
-    var grid = new Slick.Grid(gridElem, [], [], options);
     gridElem.dblclick(function (el) {
         if (el.target) {
             $(el.target).selectText();
@@ -68,6 +90,9 @@ $(function () {
     });
 
     grid.resizeCanvas();
+
+    var model = new nfsDb.Data.Model();
+
     grid.onViewportChanged.subscribe(function () {
         var vp = grid.getViewport();
         model.ensureData(vp.top, vp.bottom);
@@ -96,16 +121,16 @@ $(function () {
     model.onError.subscribe(function (e, args) {
         var msg = "";
         if (args.position || args.position == 0) {
-            // Find line.
+            // Find row.
             var query = model.getSearch();
-            var line = 1;
-            var linePos = 0;
+            var row = 0;
+            var col = 0;
             for (var i = 0; i < Math.min(query.length, args.position); i++) {
                 if (query.charAt(i) == "\n") {
-                    line++;
-                    linePos = 0;
+                    row++;
+                    col = 0;
                 } else {
-                    linePos++;
+                    col++;
                 }
 
             }
@@ -113,7 +138,7 @@ $(function () {
 
         statusElem.text(args.error);
         statusElem.addClass('msg-error');
-        sqlEditor.gotoLine(line, linePos);
+        sqlEditor.gotoLine(row + 1 + sqlEditor.lastQueryRow, row === 0 ? col + sqlEditor.lastQueryCol : col);
 
         grid.setColumns([]);
         grid.setData([]);
@@ -126,6 +151,12 @@ $(function () {
         var query = editor.getSelectedText();
         if (query == null || query == "") {
             query = editor.getValue();
+            editor.lastQueryRow = 0;
+            editor.lastQueryCol = 0;
+        } else {
+            var range = editor.getSelectionRange();
+            editor.lastQueryRow = range.start.row;
+            editor.lastQueryCol = range.start.column;
         }
 
         grid.scrollRowIntoView(0);
@@ -136,20 +167,12 @@ $(function () {
         }
     };
 
-    sqlEditor.commands.addCommand({
-        name: 'runQuery',
-        bindKey: {win: 'Ctrl-Enter', mac: 'Command-Enter'},
-        exec: function (editor) {
-            exeRun(editor);
-        }
-    });
-
     $('#btn_run').click(function () {
         exeRun(sqlEditor);
         sqlEditor.focus();
     });
 
-    var top = $('#resultGrid').offset().top;
+    var top = gridElem.offset().top;
     var bodyHeight = $(document).height();
 
     var resizeGrid = function () {
@@ -175,7 +198,7 @@ $(function () {
 
             if (x == par) {
                 sqlEditor.resize();
-                top = $('#resultGrid').offset().top;
+                top = gridElem.offset().top;
                 resizeGrid();
                 return;
             }
